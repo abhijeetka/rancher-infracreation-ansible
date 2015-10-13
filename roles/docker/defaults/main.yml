@@ -1,0 +1,7 @@
+---
+# defaults file for docker
+docker_opts: 
+    - '--dns 172.27.172.12 --dns 172.27.172.10'
+#    - '-H tcp://0.0.0.0:2375'
+docker_users:
+    - 'amol'

@@ -1,0 +1,31 @@
+
+[docker]
+172.27.59.9
+172.27.59.17
+#172.27.59.30
+172.27.59.195
+172.27.59.136
+172.27.59.223
+
+[rancher]
+rancher ansible_ssh_port=22 ansible_ssh_host=172.27.59.136
+#172.27.59.197
+
+[nodes]
+node1 ansible_ssh_port=22 ansible_ssh_host=172.27.59.9
+node2 ansible_ssh_port=22 ansible_ssh_host=172.27.59.17
+node3 ansible_ssh_port=22 ansible_ssh_host=172.27.59.195
+node4 ansible_ssh_port=22 ansible_ssh_host=172.27.59.223
+
+[labeledNodes]
+node3 ansible_ssh_port=22 ansible_ssh_host=172.27.59.195
+
+#[nodes:children]
+#application
+#database
+
+#[application]
+#node1 ansible_ssh_port=22 ansible_ssh_host=y.y.y.y
+
+#[database]
+#node2 ansible_ssh_port=22 ansible_ssh_host=z.z.z.z
