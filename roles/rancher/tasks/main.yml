@@ -18,3 +18,7 @@
 
 - name: Print Rancher's URL
   debug: msg="You can connect to rancher server http://{{ ansible_default_ipv4.address }}:{{ rancher_port }}"
+
+
+- name: install rancher-compose
+  copy: src=rancher-compose dest=/usr/bin/
