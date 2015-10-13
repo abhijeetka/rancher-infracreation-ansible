@@ -16,7 +16,7 @@
   
 - name: Register Rancher Hosts
   hosts: "nodes"
-  sudo: yes
+  user: root
   roles:
     - { role: rancher_reg, tags: ["rancher_reg"] }
 
