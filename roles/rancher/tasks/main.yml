@@ -21,4 +21,4 @@
 
 
 - name: install rancher-compose
-  copy: src=rancher-compose dest=/usr/bin/
+  copy: src=rancher-compose dest=/usr/bin/ mode=u+rwx
