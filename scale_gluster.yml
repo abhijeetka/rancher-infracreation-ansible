@@ -1,0 +1,60 @@
+---
+- hosts : localhost
+  user: root
+  tasks:
+     - name: create API key
+       uri:
+          url="http://172.27.59.136:8080/v1/projects/1a5/apikeys"
+          return_content=yes
+          method=POST
+          status_code=200
+          HEADER_Content-Type="application/json"
+       register: project_id
+       ignore_errors: True
+
+     
+     - debug: var={{ project_id.json.publicValue }}
+
+     - debug: var={{ project_id.json.secretValue }}
+
+     - debug: var={{ project_id.json.id }}
+
+
+     - name: get service scale
+       uri:
+          url="http://172.27.59.136:8080/v1/projects/1a5/services?name=gluster&state=active"
+          return_content=yes
+          method=GET
+          status_code=200
+          HEADER_Content-Type="application/json"
+       register: service_id
+       ignore_errors: True
+
+     - debug: var=service_id
+
+
+     - debug: var={{ service_id.json.data[0]['scale'] }}
+
+     - name: start app service
+       shell: cd /compose; rancher-compose --url http://172.27.59.136:8080 --access-key {{ project_id.json.publicValue }} --secret-key {{ project_id.json.secretValue }} -p ALM-TASK-MANAGER scale gluster={{ service_id.json.data[0]['scale']+1 }}
+    
+     - name: Dactivate API key
+       uri:
+          url="http://172.27.59.136:8080/v1/projects/1a5/apikeys/{{ project_id.json.id }}?action=deactivate"
+          return_content=yes
+          method=POST
+          status_code=200
+          HEADER_Content-Type="application/json"
+       ignore_errors: True
+
+     - name: Delete API key
+       uri:
+          url="http://172.27.59.136:8080/v1/projects/1a5/apikeys/{{ project_id.json.id }}"
+          return_content=yes
+          method=DELETE
+          status_code=200
+          HEADER_Content-Type="application/json"
+       ignore_errors: True
+
+
+

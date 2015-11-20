@@ -1,0 +1,26 @@
+---
+- hosts : general
+  user: root
+  tasks:
+     - name: install zip pacakge on Host
+       apt: pkg=zip state=present
+
+     - name: Creating ATM-Codebase folder
+       shell: mkdir /atm-codebase 
+       ignore_errors: true
+
+
+
+     - name: Cleaning ATM Codebase
+       shell: rm -rf /atm-codebase/*
+       ignore_errors: true
+
+
+     - name: Creating ATM-Codebase folder
+       shell: mkdir /atm-codebase/alm_task_manager
+       ignore_errors: true
+
+
+     - name: Copying and unchive new artifacts to remote machine
+       unarchive: src=Source/alm_task_manager.zip dest=/atm-codebase/alm_task_manager/ 
+

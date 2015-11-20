@@ -1,0 +1,19 @@
+---
+- hosts : general
+  user: root
+  tasks:
+     - name: Stop all containers 
+       shell: docker stop $(docker ps -a) --force
+       ignore_errors: True
+
+     - name: remove all containers
+       shell: docker rm -v $(docker ps -a) --force
+       ignore_errors: True
+
+     
+     - name: clean rancher server volume
+       shell: rm -rf /rancher/data
+       ignore_errors: True    
+
+
+

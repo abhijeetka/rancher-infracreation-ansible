@@ -13,12 +13,20 @@
   #sudo: yes
   roles:
     - { role: rancher, tags: ["rancher"] }
+
   
 - name: Register Rancher Hosts
   hosts: "nodes"
   user: root
   roles:
     - { role: rancher_reg, tags: ["rancher_reg"] }
+
+
+- name: Setting up app stack
+  hosts: "rancher"
+  user: root
+  roles:
+    - { role: deploy, tags: ["deploy"] }
 
 
 #- name: Register Rancher Hosts

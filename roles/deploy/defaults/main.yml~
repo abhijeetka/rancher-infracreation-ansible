@@ -1,0 +1,11 @@
+---
+# defaults file for rancher-compose
+rancher_name: 'rancher_server'
+rancher_port: 8080
+
+
+RANCHER_URL: 'http://172.27.59.136:8080/'
+
+RANCHER_ACCESS_KEY: ''
+
+RANCHER_SECRET_KEY: 'xGuK8SPkyp2WXTFef5zbVpGnihKZ9amw8UaS9SL6'
