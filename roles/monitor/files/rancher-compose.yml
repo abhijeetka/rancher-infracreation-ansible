@@ -1,0 +1,11 @@
+pxc:
+  scale: 3
+atm-app:
+  scale: 1
+lb:
+  scale: 4
+  load_balancer_config:
+  lb_cookie_stickiness_policy: {}
+  name: lb config
+gluster:
+  scale: 2

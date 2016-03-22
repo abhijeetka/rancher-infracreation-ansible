@@ -1,0 +1,123 @@
+---
+
+- name: remove compose dir
+  shell: rm -rf /compose
+  ignore_errors: True
+
+<<<<<<< HEAD
+#- name: remove gluster volume                
+#  shell: rm -rf	/gluster_volume
+#  ignore_errors: True
+
+#- name: remove codebase                
+#  shell: rm -rf	/atm-codebase
+#  ignore_errors: True
+=======
+- name: remove gluster volume                
+  shell: rm -rf	/gluster_volume
+  ignore_errors: True
+
+- name: remove codebase                
+  shell: rm -rf	/atm-codebase
+  ignore_errors: True
+>>>>>>> ca3391fa81c96de7c4ca628e0834fb1ae66684c6
+
+
+- name: create directory for compose files
+  file: path=/compose state=directory mode=0755
+
+- name: copy rancher compose files
+  copy: src=rancher-compose.yml dest=/compose/ mode=u+rwx
+
+- name: copy docker compose files
+  copy: src=docker-compose.yml dest=/compose/ mode=u+rwx
+
+
+
+
+- name: create API key
+  uri:
+<<<<<<< HEAD
+      url="http://172.27.59.169:8080/v1/projects/1a5/apikeys"
+=======
+      url="http://172.27.59.136:8080/v1/projects/1a5/apikeys"
+>>>>>>> ca3391fa81c96de7c4ca628e0834fb1ae66684c6
+      return_content=yes
+      method=POST
+      status_code=200
+      HEADER_Content-Type="application/json"
+  register: project_id
+  ignore_errors: True
+
+
+- debug: var={{ project_id.json.publicValue }}
+
+- debug: var={{ project_id.json.secretValue }}
+
+- debug: var={{ project_id.json.id }}
+
+
+
+
+- name: create APP Stack
+  shell: cd /compose; rancher-compose --url {{ RANCHER_URL }} --access-key {{ project_id.json.publicValue }} --secret-key {{ project_id.json.secretValue }} -p ALM-TASK-MANAGER create
+
+<<<<<<< HEAD
+- pause: seconds=60
+=======
+>>>>>>> ca3391fa81c96de7c4ca628e0834fb1ae66684c6
+
+- name: start pxc service
+  shell: cd /compose; rancher-compose --url {{ RANCHER_URL }} --access-key {{ project_id.json.publicValue }} --secret-key {{ project_id.json.secretValue }} -p ALM-TASK-MANAGER start pxc
+
+
+<<<<<<< HEAD
+- pause: seconds=60
+=======
+>>>>>>> ca3391fa81c96de7c4ca628e0834fb1ae66684c6
+
+- name: start gluster service
+  shell: cd /compose; rancher-compose --url {{ RANCHER_URL }} --access-key {{ project_id.json.publicValue }} --secret-key {{ project_id.json.secretValue }} -p ALM-TASK-MANAGER start gluster
+
+
+- pause: seconds=60
+
+
+- name: start app service
+  shell: cd /compose; rancher-compose --url {{ RANCHER_URL }} --access-key {{ project_id.json.publicValue }} --secret-key {{ project_id.json.secretValue }} -p ALM-TASK-MANAGER start atm-app
+  
+
+- name: start lb service
+  shell: cd /compose; rancher-compose --url {{ RANCHER_URL }} --access-key {{ project_id.json.publicValue }} --secret-key {{ project_id.json.secretValue }} -p ALM-TASK-MANAGER start lb
+ 
+- pause: seconds=60
+
+
+
+
+
+- name: Dactivate API key
+  uri:
+<<<<<<< HEAD
+      url="http://172.27.59.169:8080/v1/projects/1a5/apikeys/{{ project_id.json.id }}?action=deactivate"
+=======
+      url="http://172.27.59.136:8080/v1/projects/1a5/apikeys/{{ project_id.json.id }}?action=deactivate"
+>>>>>>> ca3391fa81c96de7c4ca628e0834fb1ae66684c6
+      return_content=yes
+      method=POST
+      status_code=200
+      HEADER_Content-Type="application/json"
+  ignore_errors: True
+
+- name: Delete API key
+  uri:
+<<<<<<< HEAD
+      url="http://172.27.59.169:8080/v1/projects/1a5/apikeys/{{ project_id.json.id }}"
+=======
+      url="http://172.27.59.136:8080/v1/projects/1a5/apikeys/{{ project_id.json.id }}"
+>>>>>>> ca3391fa81c96de7c4ca628e0834fb1ae66684c6
+      return_content=yes
+      method=DELETE
+      status_code=200
+      HEADER_Content-Type="application/json"
+  ignore_errors: True

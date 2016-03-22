@@ -1,0 +1,76 @@
+---
+- name: Install httplib2
+  apt:
+      name=python-httplib2
+      update_cache=yes
+
+- name: Get the default project id
+  action: uri
+      method=GET
+      status_code=200
+      url="http://{{ rancher_server }}:{{ rancher_port }}/v1/projects" return_content=yes
+  register: project_id
+
+- name: Return the registration token URL of Rancher server
+  action: uri 
+      method=POST
+      status_code=201
+      url="http://{{ rancher_server }}:{{ rancher_port }}/v1/registrationtokens?projectId={{ project_id.json['data'][0]['id'] }}" return_content=yes
+  register: rancher_token_url
+
+- name: Return the registration URL of Rancher server
+  action: uri 
+      method=GET 
+      url={{ rancher_token_url.json['links']['self'] }} return_content=yes
+  register: rancher_token
+
+- name: Check if the rancher-agent is running
+  command: docker ps -a
+  register: containers
+
+- name: Register the Host machine with the Rancher server
+  docker:
+      image: rancher/agent:v{{ rancher_agent_version }}
+      privileged: yes
+      detach: True
+      volumes: /var/run/docker.sock:/var/run/docker.sock
+      command: "{{ rancher_token.json['registrationUrl'] }}"
+      state: started
+  when: ("{{ 'rancher-agent' not in containers.stdout }}" and "{{ ansible_eth0.ipv4.address }}"!="172.27.59.195" and "{{ ansible_eth0.ipv4.address }}"!="172.27.59.178" )
+
+- name: Register the Host machine with the Rancher server
+  docker:
+      image: rancher/agent:v{{ rancher_agent_version }}
+      privileged: yes
+      detach: True
+      volumes: /var/run/docker.sock:/var/run/docker.sock
+      env: CATTLE_HOST_LABELS=alert=on
+      command: "{{ rancher_token.json['registrationUrl'] }}"
+      state: started
+  when: ("{{ 'rancher-agent' not in containers.stdout }}" and "{{ ansible_eth0.ipv4.address }}"=="172.27.59.195")
+
+
+- name: Register the Host machine with the Rancher server
+  docker:
+      image: rancher/agent:v{{ rancher_agent_version }}
+      privileged: yes
+      detach: True
+      volumes: /var/run/docker.sock:/var/run/docker.sock
+      env: CATTLE_HOST_LABELS=prom=on
+      command: "{{ rancher_token.json['registrationUrl'] }}"
+      state: started
+  when: ("{{ 'rancher-agent' not in containers.stdout }}" and "{{ ansible_eth0.ipv4.address }}"=="172.27.59.178")
+
+- name: Wait for the Rancher agent to start
+  wait_for: timeout=60
+
+
+#{{ ansible_eth0.ipv4.address }}
+#"{{ hostvars['labeledNodes']['ansible_ssh_host'] }}"
+#['ansible_eth0']['ipv4']['address']
+
+ 
+
+- name: Wait for the Rancher agent to start
+  wait_for: timeout=60
+

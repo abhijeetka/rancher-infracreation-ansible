@@ -1,0 +1,6 @@
+PrometheousAlertManager:
+  scale: 1
+MonitoringAgent:
+  metadata:
+    io.rancher.service.hash: 7caff391af89ee39a83625acc2d678cb5b683603
+

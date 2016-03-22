@@ -1,0 +1,66 @@
+
+[docker]
+#172.27.59.9
+171.27.59.184
+172.27.59.17
+172.27.59.195
+<<<<<<< HEAD
+172.27.59.169
+#172.27.59.213
+172.27.59.178
+=======
+172.27.59.136
+#172.27.59.213
+172.27.59.158
+>>>>>>> ca3391fa81c96de7c4ca628e0834fb1ae66684c6
+
+[rancher]
+rancher ansible_ssh_port=22 ansible_ssh_host=172.27.59.169
+#172.27.59.197
+
+[nodes]
+node1 ansible_ssh_port=22 ansible_ssh_host=172.27.59.184
+#node1 ansible_ssh_port=22 ansible_ssh_host=172.27.59.9
+node2 ansible_ssh_port=22 ansible_ssh_host=172.27.59.17
+node3 ansible_ssh_port=22 ansible_ssh_host=172.27.59.195
+#node4 ansible_ssh_port=22 ansible_ssh_host=172.27.59.213
+<<<<<<< HEAD
+node4 ansible_ssh_port=22 ansible_ssh_host=172.27.59.178
+=======
+node4 ansible_ssh_port=22 ansible_ssh_host=172.27.59.158
+>>>>>>> ca3391fa81c96de7c4ca628e0834fb1ae66684c6
+
+[labeledNodes]
+node3 ansible_ssh_port=22 ansible_ssh_host=172.27.59.195
+
+
+[general]
+<<<<<<< HEAD
+#172.27.59.9
+172.27.59.184
+172.27.59.17
+172.27.59.195
+#172.27.59.213
+172.27.59.178
+172.27.59.169
+=======
+172.27.59.9
+172.27.59.17
+172.27.59.195
+#172.27.59.213
+172.27.59.158
+172.27.59.136
+>>>>>>> ca3391fa81c96de7c4ca628e0834fb1ae66684c6
+
+
+
+
+#[nodes:children]
+#application
+#database
+
+#[application]
+#node1 ansible_ssh_port=22 ansible_ssh_host=y.y.y.y
+
+#[database]
+#node2 ansible_ssh_port=22 ansible_ssh_host=z.z.z.z

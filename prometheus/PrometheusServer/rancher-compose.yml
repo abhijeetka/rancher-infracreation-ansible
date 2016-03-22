@@ -1,0 +1,5 @@
+PrometheusServer:
+  scale: 1  
+Dashboard:
+  scale: 1
+

@@ -1,0 +1,134 @@
+### Alert.rules ###
+ 
+######################### Memory Usage Alerts ###################################  
+  
+### ALERT for High Memory Usage for Percona DB Cluster   
+ALERT HighMemoryAlertPercona
+  IF container_memory_usage_bytes{image="nixel/rancher-percona-xtradb-cluster:v1.1.3"} > 1000000000
+  FOR 1m
+  WITH {
+     severity="ContainerMemoryUsagePercona"
+  }
+  SUMMARY "High Memory usage for Percona DB Cluster container"
+  DESCRIPTION "High Memory usage for Percona DB Cluster container on {{$labels.instance}} for container {{$labels.name}} (current value: {{$value}})"
+  
+### ALERT for High Memory Usage for GLuster FS   
+ALERT HighMemoryAlertGluster
+  IF container_memory_usage_bytes{image="nixel/rancher-glusterfs-server:v3.7.4"} > 500000000
+  FOR 1m
+  WITH {
+     severity="ContainerMemoryUsageGluster"
+  }
+  SUMMARY "High Memory usage for Gluster FS container"
+  DESCRIPTION "High Memory usage for Gluster FS container on {{$labels.instance}} for container {{$labels.name}} (current value: {{$value}})"
+
+### ALERT for High Memory Usage for Application container 
+ALERT HighMemoryAlertApplication
+  IF container_memory_usage_bytes{image="amolsh/alm-task-manager-gfc:9.1.1"} > 500000000
+  FOR 1m
+  WITH {
+     severity="ContainerMemoryUsageApplication"
+  }
+  SUMMARY "High Memory usage for Application Container"
+  DESCRIPTION "High Memory usage for Application container on {{$labels.instance}} for container {{$labels.name}} (current value: {{$value}})"
+
+
+######################### Memory Usage Alerts ###################################  
+
+######################### CPU Usage Alerts ###################################  
+
+### ALERT for High CPU Usage for Percona DB Cluster   
+ALERT HighCPUAlertPercona
+  IF container_cpu_usage_seconds_total{image="nixel/rancher-percona-xtradb-cluster:v1.1.3",type="kernel"} > 15000
+  FOR 1m
+  WITH {
+     severity="CPUIncreasePercona"
+  }
+  SUMMARY "High CPU usage for Percona DB Cluster container"
+  DESCRIPTION "High CPU usage for Percona DB Cluster container on {{$labels.instance}} for container {{$labels.name}} (current value: {{$value}})"
+
+  
+### ALERT for High CPU Usage for GLuster FS   
+ALERT HighCPUAlertGluster
+  IF container_cpu_usage_seconds_total{image="nixel/rancher-glusterfs-server:v3.7.4",type="user"} > 500
+  FOR 1m
+  WITH {
+     severity="CPUIncreaseGluster"
+  }
+  SUMMARY "High CPU usage for Gluster FS container"
+  DESCRIPTION "High CPU usage for Gluster FS container on {{$labels.instance}} for container {{$labels.name}} (current value: {{$value}})"
+
+### ALERT for High CPU Usage for Application container 
+ALERT HighCPUAlertApplication
+  IF container_cpu_usage_seconds_total{image="amolsh/alm-task-manager-gfc:9.1.1",type="kernel"} > 9
+  FOR 1m
+  WITH {
+     severity="CPUIncreaseApplication"
+  }
+  SUMMARY "High CPU usage for Application Container"
+  DESCRIPTION "High CPU usage for Application container on {{$labels.instance}} for container {{$labels.name}} (current value: {{$value}})"
+  
+######################### CPU Usage Alerts ###################################
+
+
+######################### Container Down Alerts ###################################  
+
+### ALERT for Checking Percona DB Cluster Down
+ALERT ContainerDownAlertPercona
+  IF container_last_seen{image="nixel/rancher-percona-xtradb-cluster:v1.1.3"} == 0
+  FOR 1m
+  WITH {
+     severity="ContainerLastSeenPercona"
+  }
+  SUMMARY "Down Percona DB Cluster container"
+  DESCRIPTION "Down Percona DB Cluster container on {{$labels.instance}} for container {{$labels.name}} (current value: {{$value}})"
+
+  
+### ALERT for Checking Gluster FS Down
+ALERT ContainerDownAlertGluster
+  IF container_last_seen{image="nixel/rancher-glusterfs-server:v3.7.4"} == 0
+  FOR 1m
+  WITH {
+     severity="ContainerLastSeenGluster"
+  }
+  SUMMARY "Down Gluster container"
+  DESCRIPTION "Down Gluster container on {{$labels.instance}} for container {{$labels.name}} (current value: {{$value}})"
+
+  
+### ALERT for Checking Application Container Down
+ALERT ContainerDownAlertApplication
+  IF container_last_seen{image="amolsh/alm-task-manager-gfc:9.1.1"} == 0
+  FOR 1m
+  WITH {
+     severity="ContainerLastSeenApplication"
+  }
+  SUMMARY "Down Percona DB Cluster container"
+  DESCRIPTION "Down Percona DB Cluster container on {{$labels.instance}} for container {{$labels.name}} (current value: {{$value}})"
+
+
+######################### Container Down Alerts ###################################  
+
+########################  Container Degrade Alerts ###############################
+
+### ALERT for Checking Application Container utilizing Less Memory
+ALERT ContainerDegradeAlertApplication
+  IF avg(container_memory_usage_bytes{image="amolsh/alm-task-manager-gfc:9.1.1"}) < 120000000
+  FOR 5m
+  WITH {
+     severity="ContainerDegradeApplication"
+  }
+  SUMMARY "Degrading Application  container"
+  DESCRIPTION "Degrading Application container on {{$labels.instance}} for container {{$labels.name}} (current value: {{$value}})"
+
+### ALERT for Checking Percona Container utilizing Less Memory
+ALERT ContainerDegradeAlertPercona
+  IF avg(container_memory_usage_bytes{image="nixel/rancher-percona-xtradb-cluster:v1.1.3"}) < 300000000
+  FOR 5m
+  WITH {
+     severity="ContainerDegradeAlertPercona"
+  }
+  SUMMARY "Degrading Percona container"
+  DESCRIPTION "Degrading Percona container on {{$labels.instance}} for container {{$labels.name}} (current value: {{$value}})"
+  
+
+#######################  Container Degrade Alerts End ###########################

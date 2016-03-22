@@ -1,0 +1,33 @@
+---
+- hosts : general
+  user: root
+  tasks:
+     - name: Stop all containers 
+       shell: docker stop $(docker ps -a) --force
+       ignore_errors: True
+
+     - name: remove all containers
+       shell: docker rm -v $(docker ps -a) --force
+       ignore_errors: True
+
+     
+     - name: clean rancher server volume
+       shell: rm -rf /rancher/data
+       ignore_errors: True    
+
+<<<<<<< HEAD
+     - name: clean rancher server volume
+       shell: rm -rf /gluster_volume  
+       ignore_errors: True
+
+     - name: clean rancher server volume
+       shell: rm -rf   /prometheus
+       ignore_errors: True
+ 
+     - name: clean rancher server volume
+       shell: rm -rf /atm-codebase
+       ignore_errors: True
+=======
+
+
+>>>>>>> ca3391fa81c96de7c4ca628e0834fb1ae66684c6

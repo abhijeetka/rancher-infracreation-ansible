@@ -1,0 +1,48 @@
+
+pxc:
+  restart: 'no'
+  environment:
+    PXC_ROOT_PASSWORD: root
+    PXC_SST_PASSWORD: root
+  tty: true
+  image: nixel/rancher-percona-xtradb-cluster:v1.1.3
+  privileged: true
+  stdin_open: true
+gluster:
+  restart: 'no'
+  environment:
+    ROOT_PASSWORD: root
+    SERVICE_NAME: gluster
+  tty: true
+  image: nixel/rancher-glusterfs-server:v3.7.4
+  privileged: true
+  volumes:
+     - /gluster_volume:/gluster_volume
+  stdin_open: true
+atm-app:
+  restart: 'no'
+  labels:
+    foo: bar
+  environment:
+    DB_HOST: pxc
+    DB_PASSWORD: root
+    GLUSTER_HOST: gluster
+  tty: true
+  image: amolsh/alm-task-manager-gfc:9.1.1
+  links:
+    - gluster:gluster
+    - pxc:pxc
+  privileged: true
+  volumes:
+     - /atm-codebase:/opt  
+  stdin_open: true
+lb:
+  restart: always
+  ports:
+    - 80:80
+  tty: true
+  image: rancher/load-balancer-service
+  links:
+    - atm-app:atm-app
+  stdin_open: true
+

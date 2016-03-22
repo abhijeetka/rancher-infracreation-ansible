@@ -1,0 +1,29 @@
+https://labs.ctl.io/monitoring-docker-services-with-prometheus/
+
+
+docker run -d --name PROM_CON_EXP -p 9104:9104 -v /sys/fs/cgroup:/cgroup -v /var/run/docker.sock:/var/run/docker.sock prom/container-exporter
+
+-----------------------------
+
+docker run -d -p 9093:9093 -v $PWD/alertmanager.conf:/alertmanager.conf prom/alertmanager -config.file=/alertmanager.conf
+
+
+------------------------------
+docker run -d --name prometheus-server -p 9090:9090 -v $PWD/prometheus.conf:/prometheus.conf prom/prometheus -config.file=/prometheus.conf -alertmanager.url=http://172.27.59.65:9093
+
+
+
+new commands verified
+
+docker run -d -p 8090:80  --name myapp amolsh/php-app
+
+
+docker run -d --name PROM_CON_EXP -p 9104:9104 -v /sys/fs/cgroup:/cgroup -v /var/run/docker.sock:/var/run/docker.sock prom/container-exporter
+
+
+docker run -d -p 9093:9093 -v $PWD/alertmanager.conf:/alertmanager.conf prom/alertmanager -config.file=/alertmanager.conf
+
+docker run -d --name prometheus-server -p 9090:9090 -v $PWD/prometheus.yml:/etc/prometheus/prometheus.yml -v $PWD/prometheus.rules:/etc/prometheus/alert.rules prom/prometheus -config.file=/etc/prometheus/prometheus.yml -alertmanager.url=http://172.27.59.65:9093
+
+
+

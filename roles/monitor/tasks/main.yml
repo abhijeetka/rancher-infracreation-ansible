@@ -1,0 +1,87 @@
+---
+
+#- name: clean compose dir
+#  shell: rm -rf /monitor-compose
+#  ignore_errors: True
+
+
+#- name: create directory for compose files
+#  file: path=/monitor-compose state=directory mode=0755
+
+
+#- name: copy rancher compose files
+#  copy: src=rancher-compose.yml dest=/monitor-compose/ mode=u+rwx
+
+#- name: copy docker compose files
+#  copy: src=docker-compose.yml dest=/monitor-compose/ mode=u+rwx
+
+
+
+
+- name: create API key
+  uri:
+      url="http://172.27.59.169:8080/v1/projects/1a5/apikeys"
+      return_content=yes
+      method=POST
+      status_code=200
+      HEADER_Content-Type="application/json"
+  register: project_id
+  ignore_errors: True
+
+
+- debug: var={{ project_id.json.publicValue }}
+
+- debug: var={{ project_id.json.secretValue }}
+
+- debug: var={{ project_id.json.id }}
+
+
+
+
+- name: create Monitoring  Stack
+  shell: cd /prometheus/containerExporter; rancher-compose --url {{ RANCHER_URL }} --access-key {{ project_id.json.publicValue }} --secret-key {{ project_id.json.secretValue }} -p MONITORING create
+
+
+- name: create Monitoring  Stack
+  shell: cd /prometheus/PrometheusServer; rancher-compose --url {{ RANCHER_URL }} --access-key {{ project_id.json.publicValue }} --secret-key {{ project_id.json.secretValue }} -p MONITORING create
+
+
+
+- name: start Monitoring agent  service
+  shell: cd /prometheus/containerExporter; rancher-compose --url {{ RANCHER_URL }} --access-key {{ project_id.json.publicValue }} --secret-key {{ project_id.json.secretValue }} -p MONITORING start MonitoringAgent
+
+
+
+
+
+- name: start Prometheus Alert manager
+  shell: cd /prometheus/containerExporter; rancher-compose --url {{ RANCHER_URL }} --access-key {{ project_id.json.publicValue }} --secret-key {{ project_id.json.secretValue }} -p MONITORING start PrometheousAlertManager
+
+
+- pause: seconds=30
+
+
+- name: star Prometheus Server
+  shell: cd /prometheus/PrometheusServer; rancher-compose --url {{ RANCHER_URL }} --access-key {{ project_id.json.publicValue }} --secret-key {{ project_id.json.secretValue }} -p MONITORING start PrometheusServer
+  
+- name: star Prometheus Server
+  shell: cd /prometheus/PrometheusServer; rancher-compose --url {{ RANCHER_URL }} --access-key {{ project_id.json.publicValue }} --secret-key {{ project_id.json.secretValue }} -p MONITORING start Dashboard
+
+
+- name: Dactivate API key
+  uri:
+      url="http://172.27.59.169:8080/v1/projects/1a5/apikeys/{{ project_id.json.id }}?action=deactivate"
+      return_content=yes
+      method=POST
+      status_code=200
+      HEADER_Content-Type="application/json"
+  ignore_errors: True
+
+- name: Delete API key
+  uri:
+      url="http://172.27.59.169:8080/v1/projects/1a5/apikeys/{{ project_id.json.id }}"
+      return_content=yes
+      method=DELETE
+      status_code=200
+      HEADER_Content-Type="application/json"
+  ignore_errors: True

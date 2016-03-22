@@ -1,0 +1,48 @@
+ALERT HighMemoryAlert
+ IF container_memory_usage_bytes{image="amol/php-app"} > 50
+
+  FOR 1m
+  WITH {}
+  SUMMARY "High Memory usage for Jmeter container"
+  DESCRIPTION "High Memory usage for Jmeter container on {{$labels.instance}} for container {{$labels.name}} (current value: {{$value}})"
+
+
+ALERT pmx_down
+  IF up == 0
+  FOR 5m
+  WITH {
+    severity="page"
+  }
+  SUMMARY "Instance {{$labels.instance}} down"
+  DESCRIPTION "{{$labels.instance}} of job {{$labels.job}} has been down for more than 5 minutes."
+
+
+
+
+ALERT NodeDown
+  IF up{env =~ "^prod$|^dmz$"} == 0
+  FOR 2m
+  WITH {
+    severity="page"
+  }
+  SUMMARY "Node {{$labels.instance}} down"
+  DESCRIPTION "{{$labels.instance}} has been down for more than 5 minutes."
+
+ALERT NodeLowMemory
+  IF mem_available_percent{env =~ "^prod$|^dmz$"} < 10
+  FOR 2m
+  WITH {
+    severity="page"
+  }
+  SUMMARY "Node {{$labels.instance}} memory low"
+  DESCRIPTION "{{$labels.instance}} has less than 10% memory available"
+
+ALERT NodeLowDisk
+  IF node_filesystem_avail_percent{filesystem="/"} < 20
+  FOR 2m
+  WITH {
+    severity="page"
+  }
+  SUMMARY "{{$labels.instance}}: Low disk space"
+  DESCRIPTION "{{$labels.instance}}: Free disk space for / dropped below 20%"
+

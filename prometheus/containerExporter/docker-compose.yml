@@ -1,0 +1,25 @@
+PrometheousAlertManager:
+  ports:
+  - 9093:9093/tcp
+  labels:
+    io.rancher.scheduler.affinity:host_label: 'alert=on'
+  command:
+  - -config.file=/alertmanager.conf
+  tty: true
+  image: prom/alertmanager
+  volumes:
+  - /prometheus/alertmanager.conf:/alertmanager.conf
+  stdin_open: true
+MonitoringAgent:
+  ports:
+  - 9104:9104/tcp
+  labels:
+    io.rancher.scheduler.global: 'true'
+    io.rancher.service.hash: 9f9c5fc83a06d4fdbd5c80a9b0cb9cf7b4af2525
+  tty: true
+  image: usman/container-exporter
+  volumes:
+  - /var/run/docker.sock:/var/run/docker.sock
+  - /sys/fs/cgroup:/cgroup
+  stdin_open: true
+

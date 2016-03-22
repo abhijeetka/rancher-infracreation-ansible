@@ -1,0 +1,27 @@
+Dashboard:
+  ports:
+  - 3000:3000/tcp
+  environment:
+    DATABASE_URL: sqlite3:/tmp/prom/file.sqlite3
+  tty: true
+  image: prom/promdash
+  volumes:
+  - /prometheus:/tmp/prom
+  stdin_open: true
+PrometheusServer:
+  ports:
+  - 9090:9090/tcp
+  labels:
+    io.rancher.scheduler.affinity:host_label: 'prom=on'
+  environment:
+    ALERTMANAGERURL: http://172.27.59.195:9093/
+    config.file: /etc/prometheus/prometheus.yml
+  tty: true
+  command:
+  - -config.file=/etc/prometheus/prometheus.yml
+  image: amolsh/prometheus-server:2.0
+  volumes:
+  - /prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+  - /prometheus/prometheus.rules:/etc/prometheus/alert.rules
+  stdin_open: true
+

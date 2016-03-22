@@ -1,0 +1,58 @@
+---
+
+- name: Installing and configuring Docker 
+  hosts: "docker"
+  user: root
+  #sudo: yes
+  roles:
+    - { role: docker, tags: ["docker"] }
+
+- name: Setting up Rancher Server
+  hosts: "rancher"
+  user: root
+  #sudo: yes
+  roles:
+    - { role: rancher, tags: ["rancher"] }
+
+  
+- name: Register Rancher Hosts
+  hosts: "nodes"
+  user: root
+  roles:
+    - { role: rancher_reg, tags: ["rancher_reg"] }
+
+
+- name: Setting up app stack
+  hosts: "rancher"
+  user: root
+  roles:
+    - { role: deploy, tags: ["deploy"] }
+
+<<<<<<< HEAD
+- name: Setting up Monitoring stack
+  hosts: "rancher"
+  user: root
+  #sudo: yes
+  roles:
+    - { role: monitor, tags: ["monitor"] }
+
+=======
+>>>>>>> ca3391fa81c96de7c4ca628e0834fb1ae66684c6
+
+#- name: Register Rancher Hosts
+#  hosts: "labeledNodes"
+#  sudo: yes
+#  roles:
+#    - { role: rancher_reg, tags: ["rancher_reg"] }
+
+#- name: Deploy MySQL Container
+#  hosts: 'database'
+#  sudo: yes
+#  roles:
+#      - { role: mysql_docker, tags: ["mysql_docker"] }
+
+#- name: Deploy Wordpress App
+#  hosts: "application"
+#  sudo: yes
+#  roles:
+#    - { role: wordpress_docker, tags: ["wordpress_docker"] }

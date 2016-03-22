@@ -1,0 +1,59 @@
+---
+- hosts : rancher
+  user: root
+  tasks:
+     
+
+     - name: create API key
+       uri:
+<<<<<<< HEAD
+          url="http://172.27.59.169:8080/v1/projects/1a5/apikeys"
+=======
+          url="http://172.27.59.136:8080/v1/projects/1a5/apikeys"
+>>>>>>> ca3391fa81c96de7c4ca628e0834fb1ae66684c6
+          return_content=yes
+          method=POST
+          status_code=200
+          HEADER_Content-Type="application/json"
+       register: project_id
+       ignore_errors: True
+
+
+     - name: delete services in stack
+<<<<<<< HEAD
+       shell: cd /compose; rancher-compose --url http://172.27.59.169:8080 --access-key {{ project_id.json.publicValue }} --secret-key {{ project_id.json.secretValue }} -p ALM-TASK-MANAGER rm --force
+=======
+       shell: cd /compose; rancher-compose --url http://172.27.59.136:8080 --access-key {{ project_id.json.publicValue }} --secret-key {{ project_id.json.secretValue }} -p ALM-TASK-MANAGER rm --force
+>>>>>>> ca3391fa81c96de7c4ca628e0834fb1ae66684c6
+       ignore_errors: True
+
+
+     - name: Dactivate API key
+       uri:
+<<<<<<< HEAD
+          url="http://172.27.59.169:8080/v1/projects/1a5/apikeys/{{ project_id.json.id }}?action=deactivate"
+=======
+          url="http://172.27.59.136:8080/v1/projects/1a5/apikeys/{{ project_id.json.id }}?action=deactivate"
+>>>>>>> ca3391fa81c96de7c4ca628e0834fb1ae66684c6
+          return_content=yes
+          method=POST
+          status_code=200
+          HEADER_Content-Type="application/json"
+       ignore_errors: True
+
+     - name: Delete API key
+       uri:
+<<<<<<< HEAD
+          url="http://172.27.59.169:8080/v1/projects/1a5/apikeys/{{ project_id.json.id }}"
+=======
+          url="http://172.27.59.136:8080/v1/projects/1a5/apikeys/{{ project_id.json.id }}"
+>>>>>>> ca3391fa81c96de7c4ca628e0834fb1ae66684c6
+          return_content=yes
+          method=DELETE
+          status_code=200
+          HEADER_Content-Type="application/json"
+       ignore_errors: True
+    
+
+
+
